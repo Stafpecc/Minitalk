@@ -26,13 +26,22 @@ LIBFT 			= $(LIBFT_DIR)/libft.a
 
 SRC_CLIENT		= cfiles/client.c
 SRC_SERVER 		= cfiles/server.c
-SRCB_CLIENT		= cfiles/client_bonus.c
-SRCB_SERVER 	= cfiles/server_bonus.c
+
+SRCB_CLIENT		= cfiles/client_bonus.c \
+			cfiles/utils_client_bonus.c
+
+SRCB_SERVER 	= cfiles/server_bonus.c \
+			cfiles/utils_serv_bonus.c
 
 OBJ_CLIENT 		= $(OBJ_DIR)/client.o
 OBJ_SERVER 		= $(OBJ_DIR)/server.o
-OBJB_CLIENT 	= $(OBJ_DIR)/client_bonus.o
-OBJB_SERVER 	= $(OBJ_DIR)/server_bonus.o
+
+OBJB_CLIENT 	= $(OBJ_DIR)/client_bonus.o \
+			 $(OBJ_DIR)/utils_client_bonus.o
+
+OBJB_SERVER 	= $(OBJ_DIR)/server_bonus.o \
+			$(OBJ_DIR)/utils_serv_bonus.o
+
 
 #------------------------------------------------------------------------------#
 # 							COMMANDS									       #
@@ -215,14 +224,14 @@ $(NAME_CLIENT): $(OBJ_CLIENT) $(LIBFT) | $(EXEC_DIR)
 
 	echo "$(GREEN)$(NAME_CLIENT) created successfully!$(RESET)"
 
-$(NAME_SERVER): $(OBJ_SERVER) $(LIBFT) | $(EXEC_DIR)
+$(NAME_SERVER): $(OBJB_UTILS) $(OBJ_SERVER) $(LIBFT) | $(EXEC_DIR)
 	echo "$(PURPLE)Linking $(NAME_SERVER)...$(RESET)"
 
 		$(CC) $(OBJ_SERVER) -o $(NAME_SERVER) -L$(LIBFT_DIR) -lft
 
 	echo "$(GREEN)$(NAME_SERVER) created successfully!$(RESET)"
 
-$(NAMEB_CLIENT): $(OBJB_CLIENT) $(LIBFT) | $(EXEC_DIR)
+$(NAMEB_CLIENT): $(OBJB_UTILS) $(OBJB_CLIENT) $(LIBFT) | $(EXEC_DIR)
 	echo "$(PURPLE)Linking $(NAMEB_CLIENT)...$(RESET)"
 
 		$(CC) $(OBJB_CLIENT) -o $(NAMEB_CLIENT) -L$(LIBFT_DIR) -lft
