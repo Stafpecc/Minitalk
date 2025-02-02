@@ -10,8 +10,11 @@
 
 NAME_CLIENT		= exec/client
 NAME_SERVER     = exec/server
+NAMEB_CLIENT	= exec/client_bonus
+NAMEB_SERVER    = exec/server_bonus
+
 SERVER_EXEC		= server
-CLIENT_EXEC		= client
+SERVER_EXECB	= server_bonus
 
 OBJ_DIR 		= .objs
 EXEC_DIR 		= exec
@@ -23,10 +26,13 @@ LIBFT 			= $(LIBFT_DIR)/libft.a
 
 SRC_CLIENT		= cfiles/client.c
 SRC_SERVER 		= cfiles/server.c
+SRCB_CLIENT		= cfiles/client_bonus.c
+SRCB_SERVER 	= cfiles/server_bonus.c
 
 OBJ_CLIENT 		= $(OBJ_DIR)/client.o
 OBJ_SERVER 		= $(OBJ_DIR)/server.o
-
+OBJB_CLIENT 	= $(OBJ_DIR)/client_bonus.o
+OBJB_SERVER 	= $(OBJ_DIR)/server_bonus.o
 
 #------------------------------------------------------------------------------#
 # 							COMMANDS									       #
@@ -72,16 +78,53 @@ all: $(LIBFT) $(NAME_CLIENT) $(NAME_SERVER)
 	echo "$(RESET)"
 
 
+bonus: $(LIBFT) $(NAMEB_CLIENT) $(NAMEB_SERVER)
+	echo "$(GREEN)"
+	echo "┌───────────────────────────────────────────────────────────┐"
+	echo "│      Compilation finished successfully! ᕕ(⌐■_■)ᕗ ♪♬       │"
+	echo "└───────────────────────────────────────────────────────────┘"
+
+	echo "                      ☆  *    .      ☆"
+	echo "                        ∧＿∧   ∩    * ☆"
+	echo "                 *  ☆ ( ・∀・)/ ."
+	echo "                  .  ⊂      ノ* ☆"
+	echo "                ☆ * (つ   ノ  .☆"
+	echo "                      (ノ"
+
+	echo "$(RESET)"
+
+
 run_terminals: all
-	gnome-terminal -- bash -c "cd /home/tarini/Documents/Workspace/TC/Rank_2/Minitalk/exec && echo -e '\033[1;35mWelcome to \033[1;34m\033[1;4mMinitalk\033[0m\033[1;35m! To\033[0m \033[1;35mplease enter\033[0m \033[1;31m./client\033[0m \033[1;31m<PID displayed in the second terminal>\033[0m \033[1;31m<message you want to send>\033[0m'; exec bash" &
+	gnome-terminal -- bash -c "\
+		cd /home/tarini/Documents/Workspace/TC/Rank_2/Minitalk/exec &&\
+		echo -e '\033[1;35mWelcome to \033[1;34m\033[1;4mMinitalk !\n\033[0m\
+		\033[1;35mPLEASE ENTER :\n\033[0m \033[1;31m\n./client \033[0m\033[1;31m<PID displayed in the second terminal>\033[0m\033[1;31m <message you want to send>\033[0m';\
+		exec bash" &
 	sleep 1
-	gnome-terminal -- bash -c "cd /home/tarini/Documents/Workspace/TC/Rank_2/Minitalk/exec && sleep 1 && ./$(SERVER_EXEC); exec bash" &
+	gnome-terminal -- bash -c "\
+		cd /home/tarini/Documents/Workspace/TC/Rank_2/Minitalk/exec &&\
+		sleep 1 && ./$(SERVER_EXEC);\
+		exec bash" &
+
+
+run_terminals_bonus: bonus
+	gnome-terminal -- bash -c "\
+		cd /home/tarini/Documents/Workspace/TC/Rank_2/Minitalk/exec &&\
+		echo -e '\033[1;35mWelcome to \033[1;34m\033[1;4mMinitalk !\n\033[0m\
+		\033[1;35mPLEASE ENTER :\n\033[0m \033[1;31m\n./client_bonus \033[0m\033[1;31m<PID displayed in the second terminal>\033[0m\033[1;31m <message you want to send>\033[0m';\
+		exec bash" &
+	sleep 1
+	gnome-terminal -- bash -c "\
+		cd /home/tarini/Documents/Workspace/TC/Rank_2/Minitalk/exec &&\
+		sleep 1 && ./$(SERVER_EXECB);\
+		exec bash" &
 
 
 clean:
 	echo "$(RED)Deleting object files...$(RESET)"
 
 		$(RM) $(OBJ_CLIENT) $(OBJ_SERVER)
+		$(RM) $(OBJB_CLIENT) $(OBJB_SERVER)
 		$(MAKE) -sC $(LIBFT_DIR) clean
 		$(RM) massif.out*
 
@@ -178,6 +221,20 @@ $(NAME_SERVER): $(OBJ_SERVER) $(LIBFT) | $(EXEC_DIR)
 		$(CC) $(OBJ_SERVER) -o $(NAME_SERVER) -L$(LIBFT_DIR) -lft
 
 	echo "$(GREEN)$(NAME_SERVER) created successfully!$(RESET)"
+
+$(NAMEB_CLIENT): $(OBJB_CLIENT) $(LIBFT) | $(EXEC_DIR)
+	echo "$(PURPLE)Linking $(NAMEB_CLIENT)...$(RESET)"
+
+		$(CC) $(OBJB_CLIENT) -o $(NAMEB_CLIENT) -L$(LIBFT_DIR) -lft
+
+	echo "$(GREEN)$(NAMEB_CLIENT) created successfully!$(RESET)"
+
+$(NAMEB_SERVER): $(OBJB_SERVER) $(LIBFT) | $(EXEC_DIR)
+	echo "$(PURPLE)Linking $(NAMEB_SERVER)...$(RESET)"
+
+		$(CC) $(OBJB_SERVER) -o $(NAMEB_SERVER) -L$(LIBFT_DIR) -lft
+
+	echo "$(GREEN)$(NAMEB_SERVER) created successfully!$(RESET)"
 
 $(OBJ_DIR)/%.o: cfiles/%.c | $(OBJ_DIR)
 	echo "$(PURPLE)Compiling $< into $@$(RESET)"

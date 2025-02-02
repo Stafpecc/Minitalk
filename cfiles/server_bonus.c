@@ -6,49 +6,91 @@
 /*   By: tarini <tarini@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/01 22:59:06 by tarini            #+#    #+#             */
-/*   Updated: 2025/02/01 22:59:08 by tarini           ###   ########.fr       */
+/*   Updated: 2025/02/02 15:52:05 by tarini           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minitalk.h"
 
-static void	ft_handler(int signal)
+static void reset_handler_state(int *bit, int *i)
 {
-	static int	bit = 0;
-	static int	i = 0;
-
-	if (signal == SIGUSR1)
-		i |= (0x01 << bit);
-	bit++;
-	if (bit == 8)
-	{
-		ft_printf("\033[1;36m%c\033[0m", i);
-		kill(getppid(), SIGUSR1);
-		bit = 0;
-		i = 0;
-	}
+    *bit = 0;
+    *i = 0;
 }
 
-int	main(int argc, char **argv)
+static void handle_signal(int signal)
 {
-	int	pid;
+    static int bit = 0;
+    static int i = 0;
 
-	(void)argv;
-	if (argc != 1)
-	{
-		ft_printf("\033[1;91mError: Invalid arguments!\033[0m\n");
-		ft_printf("\033[1;33mUsage: ./server\033[0m\n");
-		return (0);
-	}
-	pid = getpid();
-	ft_printf("\033[1;34m===== Server PID =====\033[0m\n");
-	ft_printf("\033[1;36mPID\033[0m \033[1;92m->\033[0m %d\n", pid);
-	ft_printf("\033[1;90mWaiting for a message...\033[0m\n");
-	while (argc == 1)
-	{
-		signal(SIGUSR1, ft_handler);
-		signal(SIGUSR2, ft_handler);
-		pause();
-	}
-	return (0);
+    if (signal == SIGUSR1)
+        i |= (0x01 << bit);
+    bit++;
+
+    if (bit == 8)
+    {
+        ft_printf("\033[1;36m%c\033[0m", i);
+        reset_handler_state(&bit, &i);
+        kill(getppid(), SIGUSR1);
+    }
+}
+
+static void handle_unicode_signal(int signal)
+{
+    static int bit = 0;
+    static int unicode_char = 0;
+
+    if (signal == SIGUSR1)
+        unicode_char |= (0x01 << bit);
+    bit++;
+
+    if (bit == 32)
+    {
+        ft_printf("\033[1;36m%lc\033[0m", unicode_char);
+        reset_handler_state(&bit, &unicode_char);
+        kill(getppid(), SIGUSR1);
+    }
+}
+
+static void setup_signals(void)
+{
+    signal(SIGUSR1, handle_signal);
+    signal(SIGUSR2, handle_signal);
+}
+
+static void setup_unicode_signals(void)
+{
+    signal(SIGUSR1, handle_unicode_signal);
+    signal(SIGUSR2, handle_unicode_signal);
+}
+
+static void display_server_pid(void)
+{
+    int pid = getpid();
+    ft_printf("\033[1;34m===== Server PID =====\033[0m\n");
+    ft_printf("\033[1;36mThe server's PID is:\033[0m \033[1;92m%d\033[0m\n", pid);
+    ft_printf("\033[1;90mListening for incoming signals...\033[0m\n");
+}
+
+int main(int argc, char **argv)
+{
+    (void)argv;
+
+    if (argc != 1)
+    {
+        ft_printf("\033[1;91mError: Invalid arguments!\033[0m\n");
+        ft_printf("\033[1;33mUsage: ./server\033[0m\n");
+        return (0);
+    }
+
+    display_server_pid();
+    setup_signals();
+    setup_unicode_signals();
+
+    while (1)
+    {
+        pause();
+    }
+
+    return (0);
 }
