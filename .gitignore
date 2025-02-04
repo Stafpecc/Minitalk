@@ -10,6 +10,8 @@ massif.out*
 
 # Files and directories to exclude from pushing to 42
 .minitalkTester/
+Dockerfile
+README.md
 
 # Docker files
 docker-compose.override.yml

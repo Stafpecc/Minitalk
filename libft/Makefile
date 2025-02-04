@@ -176,7 +176,8 @@ SRCS = \
 	ft_lstdelone_bonus.c              \
 	ft_lstclear_bonus.c               \
 	ft_lstiter_bonus.c                \
-	ft_lstmap_bonus.c 
+	ft_lstmap_bonus.c 				  \
+	ft_atoi_only_num.c
 
 SRCS:= $(SRCS:%=$(SRCS_DIR)/%)
 
@@ -195,7 +196,7 @@ DEPS= $(OBJS:.o=.d)
 
 CC= cc
 
-CFLAGS= -Werror -Wextra -Wall -MMD -MP
+CFLAGS= -Werror -Wextra -Wall
 
 RM= rm -rf
 

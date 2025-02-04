@@ -1,49 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_atoi.c                                          :+:      :+:    :+:   */
+/*   ft_atoi_only_num.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tarini <tarini@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 14:54:30 by tarini            #+#    #+#             */
-/*   Updated: 2025/02/04 16:47:11 by tarini           ###   ########.fr       */
+/*   Updated: 2025/02/04 17:28:34 by tarini           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/libft.h"
 
-int	ft_pass(int i, const char *str, int *s)
+t_bool	ft_atoi_only_num(const char *str, int *result)
 {
-	while (str[i] == '\t' || str[i] == '\n' || str[i] == '\v'
-		|| str[i] == '\f' || str[i] == '\r' || str[i] == ' ')
-		i++;
-	if (str[i] == '-' || str[i] == '+')
-	{
-		if (str[i] == '-')
-			*s = -1;
-		i++;
-	}
-	return (i);
-}
+	const char	*ptr;
 
-int	ft_atoi(const char *nptr)
-{
-	int				i;
-	int				sign;
-	long long int	result;
-
-	i = 0;
-	sign = 1;
-	result = 0;
-	i = ft_pass(i, nptr, &sign);
-	while (ft_isdigit(nptr[i]))
+	if (!str || !*str)
+		return (FALSE);
+	ptr = str;
+	while (*ptr)
 	{
-		if ((result * 10 + (nptr[i] - '0')) / 10 != result)
-			return (-1 * (sign > 0));
-		result = result * 10 + (nptr[i] - '0');
-		i++;
+		if (!ft_isdigit(*ptr))
+			return (FALSE);
+		ptr++;
 	}
-	return ((int)result * sign);
+	*result = ft_atoi(str);
+	if (*result <= 0)
+		return (FALSE);
+	return (TRUE);
 }
 
 /*

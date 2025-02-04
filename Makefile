@@ -37,7 +37,7 @@ OBJ_CLIENT 		= $(OBJ_DIR)/client.o
 OBJ_SERVER 		= $(OBJ_DIR)/server.o
 
 OBJB_CLIENT 	= $(OBJ_DIR)/client_bonus.o \
-			 $(OBJ_DIR)/utils_client_bonus.o
+			$(OBJ_DIR)/utils_client_bonus.o
 
 OBJB_SERVER 	= $(OBJ_DIR)/server_bonus.o \
 			$(OBJ_DIR)/utils_serv_bonus.o
@@ -104,26 +104,27 @@ bonus: $(LIBFT) $(NAMEB_CLIENT) $(NAMEB_SERVER)
 
 
 run_terminals: all
-	gnome-terminal -- bash -c "\
+	gnome-terminal --geometry=105x54+0+0 -- bash -c "\
 		cd /home/tarini/Documents/Workspace/TC/Rank_2/Minitalk/exec &&\
-		echo -e '\033[1;35mWelcome to \033[1;34m\033[1;4mMinitalk !\n\033[0m\
-		\033[1;35mPLEASE ENTER :\n\033[0m \033[1;31m\n./client \033[0m\033[1;31m<PID displayed in the second terminal>\033[0m\033[1;31m <message you want to send>\033[0m';\
+		echo -e '\033[1;34m\033[1;4m				Welcome to Minitalk !\n\033[0m\
+		\033[1;35m\nPLEASE ENTER :\n\
+		\033[0m \033[1;31m\n./client \033[0m\033[1;31m<PID displayed in the second terminal>\033[0m\033[1;31m <message you want to send>\033[0m';\
 		exec bash" &
 	sleep 1
-	gnome-terminal -- bash -c "\
+	gnome-terminal --geometry=105x54+1920+0 -- bash -c "\
 		cd /home/tarini/Documents/Workspace/TC/Rank_2/Minitalk/exec &&\
 		sleep 1 && ./$(SERVER_EXEC);\
 		exec bash" &
 
 
 run_terminals_bonus: bonus
-	gnome-terminal -- bash -c "\
+	gnome-terminal -geometry=105x54+0+0 -- bash -c "\
 		cd /home/tarini/Documents/Workspace/TC/Rank_2/Minitalk/exec &&\
 		echo -e '\033[1;35mWelcome to \033[1;34m\033[1;4mMinitalk !\n\033[0m\
 		\033[1;35mPLEASE ENTER :\n\033[0m \033[1;31m\n./client_bonus \033[0m\033[1;31m<PID displayed in the second terminal>\033[0m\033[1;31m <message you want to send>\033[0m';\
 		exec bash" &
 	sleep 1
-	gnome-terminal -- bash -c "\
+	gnome-terminal -geometry=105x54+0+0 -- bash -c "\
 		cd /home/tarini/Documents/Workspace/TC/Rank_2/Minitalk/exec &&\
 		sleep 1 && ./$(SERVER_EXECB);\
 		exec bash" &
