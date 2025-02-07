@@ -1,6 +1,6 @@
 
 .SILENT:
-.PHONY: all clean fclean re help fsanitize valgrind
+.PHONY: all clean fclean re help fsanitize valgrind bonus run_terminals_bonus run_terminals go
 
 
 #------------------------------------------------------------------------------#
@@ -27,21 +27,16 @@ LIBFT 			= $(LIBFT_DIR)/libft.a
 SRC_CLIENT		= cfiles/client.c
 SRC_SERVER 		= cfiles/server.c
 
-SRCB_CLIENT		= cfiles/client_bonus.c \
-			cfiles/utils_client_bonus.c
+SRCB_CLIENT		= cfiles/client_bonus.c
 
-SRCB_SERVER 	= cfiles/server_bonus.c \
-			cfiles/utils_serv_bonus.c
+SRCB_SERVER 	= cfiles/server_bonus.c
 
 OBJ_CLIENT 		= $(OBJ_DIR)/client.o
 OBJ_SERVER 		= $(OBJ_DIR)/server.o
 
-OBJB_CLIENT 	= $(OBJ_DIR)/client_bonus.o \
-			$(OBJ_DIR)/utils_client_bonus.o
+OBJB_CLIENT 	= $(OBJ_DIR)/client_bonus.o
 
-OBJB_SERVER 	= $(OBJ_DIR)/server_bonus.o \
-			$(OBJ_DIR)/utils_serv_bonus.o
-
+OBJB_SERVER 	= $(OBJ_DIR)/server_bonus.o
 
 #------------------------------------------------------------------------------#
 # 							COMMANDS									       #
@@ -118,13 +113,13 @@ run_terminals: all
 
 
 run_terminals_bonus: bonus
-	gnome-terminal -geometry=105x54+0+0 -- bash -c "\
+	gnome-terminal --geometry=105x54+0+0 -- bash -c "\
 		cd /home/tarini/Documents/Workspace/TC/Rank_2/Minitalk/exec &&\
 		echo -e '\033[1;35mWelcome to \033[1;34m\033[1;4mMinitalk !\n\033[0m\
 		\033[1;35mPLEASE ENTER :\n\033[0m \033[1;31m\n./client_bonus \033[0m\033[1;31m<PID displayed in the second terminal>\033[0m\033[1;31m <message you want to send>\033[0m';\
 		exec bash" &
 	sleep 1
-	gnome-terminal -geometry=105x54+0+0 -- bash -c "\
+	gnome-terminal --geometry=105x54+0+0 -- bash -c "\
 		cd /home/tarini/Documents/Workspace/TC/Rank_2/Minitalk/exec &&\
 		sleep 1 && ./$(SERVER_EXECB);\
 		exec bash" &
@@ -171,7 +166,9 @@ fclean: clean
 	echo "$(RESET)"
 
 
-re : fclean all
+go: fclean help run_terminals
+
+re: fclean all
 
 
 help:
@@ -181,11 +178,29 @@ help:
 	echo " "
 	echo "$(GREEN)───────────────────────────────────────────────────────────────────"
 	echo " "
-	echo "$(GREEN)  all$(RESET)              $(PURPLE)-$(RESET) Compile the library and generate $(NAME)"
-	echo "$(GREEN)  clean$(RESET)            $(PURPLE)-$(RESET) Remove all object files and temporary build files"
-	echo "$(GREEN)  fclean$(RESET)           $(PURPLE)-$(RESET) Perform 'clean' and remove the $(NAME) archive"
-	echo "$(GREEN)  re$(RESET)               $(PURPLE)-$(RESET) Rebuild everything from scratch"
-	echo "$(GREEN)  run_terminals$(RESET)    $(PURPLE)-$(RESET) Open terminals for running server and client"
+	echo "$(GREEN)  all$(RESET)                   "
+	echo "    $(PURPLE)-$(RESET) Generate $(NAME_CLIENT) and $(NAME_SERVER)"
+	echo " "
+	echo "$(GREEN)  bonus$(RESET)                 "
+	echo "    $(PURPLE)-$(RESET) Generate $(NAMEB_CLIENT) and $(NAMEB_SERVER)"
+	echo " "
+	echo "$(GREEN)  clean$(RESET)                 "
+	echo "    $(PURPLE)-$(RESET) Remove all object files and temporary build files"
+	echo " "
+	echo "$(GREEN)  fclean$(RESET)                "
+	echo "    $(PURPLE)-$(RESET) Perform 'clean', close all term and remove the $(NAME) archive"
+	echo " "
+	echo "$(GREEN)  re$(RESET)                    "
+	echo "    $(PURPLE)-$(RESET) Rebuild everything from scratch"
+	echo " "
+	echo "$(GREEN)  run_terminals$(RESET)         "
+	echo "    $(PURPLE)-$(RESET) Open terminals for running server and client"
+	echo " "
+	echo "$(GREEN)  run_terminals_bonus$(RESET)   "
+	echo "    $(PURPLE)-$(RESET) Open terminals for running bonus server and bonus client"
+	echo " "
+	echo "$(GREEN)  go$(RESET)   "
+	echo "    $(PURPLE)-$(RESET) use fclean, help and run_terminals rule"
 	echo " "
 	echo "$(GREEN)───────────────────────────────────────────────────────────────────"
 
