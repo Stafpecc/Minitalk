@@ -1,125 +1,3 @@
-# .SILENT:
-# .PHONY: all clean fclean fsanitize re
-
-# NAME=libft.a
-
-# #------------------------------------------------------------------------------#
-# # 							VARIABLES										   #
-# #------------------------------------------------------------------------------#
-
-# SRCS_DIR= cfiles/
-
-# SRCS = \
-# 	isdigit                     \
-# 	isalpha                     \
-# 	isalnum                     \
-# 	isascii                     \
-# 	isprint                     \
-# 	strlen                      \
-# 	memset                      \
-# 	bzero                       \
-# 	memcpy                      \
-# 	memmove                     \
-# 	strlcpy                     \
-# 	strlcat                     \
-# 	toupper                     \
-# 	tolower                     \
-# 	strchr                      \
-# 	strrchr                     \
-# 	strncmp                     \
-# 	memchr                      \
-# 	memcmp                      \
-# 	strnstr                     \
-# 	atoi                        \
-# 	strdup                      \
-# 	calloc                      \
-# 	split                       \
-# 	substr                      \
-# 	strjoin                     \
-# 	strcmp				        \
-# 	strtrim                     \
-# 	itoa                        \
-# 	putchar_fd                  \
-# 	putstr_fd                   \
-# 	putendl_fd                  \
-# 	putnbr_fd                   \
-# 	strmapi                     \
-# 	striteri                    \
-# 	printf		                \
-# 	putchar			            \
-# 	putstr			            \
-# 	putnbrbase		            \
-# 	handle                      \
-# 	lstnew_bonus                \
-# 	lstadd_front_bonus          \
-# 	lstsize_bonus               \
-# 	lstlast_bonus               \
-# 	lstadd_back_bonus           \
-# 	lstdelone_bonus             \
-# 	lstclear_bonus              \
-# 	lstiter_bonus               \
-# 	lstmap_bonus
-
-# OBJS_DIR      = .objs/
-
-# SRC			  = $(patsubst %, $(SRCS_DIR)ft_%.c, $(CFILES))
-
-# OBJS		  = $(patsubst $(SRCS_DIR)%.c, .objs/%.o, $(SRC))
-
-# OBJS_DIR= ./OBJS
-
-# INCS= includes
-
-# DEPS= $(OBJS:.o=.d)
-
-
-# #------------------------------------------------------------------------------#
-# # 							COMMANDS									       #
-# #------------------------------------------------------------------------------#
-
-# CC= cc
-
-# CFLAGS= -Werror -Wextra -Wall -MMD -MP
-
-# RM= rm -rf
-
-# CFSIGSEV = -fsanitize=address
-
-# DIR_DUP= mkdir -p $(@D)
-
-# AR = ar rcs
-
-# MAKEFLAGS += --no-print-directory
-
-# #------------------------------------------------------------------------------#
-# # 							RULES											   #
-# #------------------------------------------------------------------------------#
-
-# all:$(NAME)
-
-# -include $(DEPS)
-
-# $(NAME): $(OBJS) $(INCS)
-# 	$(AR) $(NAME) $(OBJS)
-
-# $(OBJS_DIR)/%.o: $(SRCS_DIR)/%.c
-# 	@$(DIR_DUP)
-# 	$(CC) $(CFLAGS) -I$(INCS) -c $< -o $@
-
-# fsanitize:
-# 	$(MAKE) CFLAGS="$(CFLAGS) $(CFSIGSEV)"
-
-# clean:
-# 	$(RM) $(OBJS_DIR)
-
-# fclean:clean
-# 	$(RM) $(NAME)
-# 	rm -f a.out
-
-# re:fclean all
-
-# .PHONY: all clean fclean re
-
 NAME=libft.a
 
 #------------------------------------------------------------------------------#
@@ -177,7 +55,8 @@ SRCS = \
 	ft_lstclear_bonus.c               \
 	ft_lstiter_bonus.c                \
 	ft_lstmap_bonus.c 				  \
-	ft_atoi_only_num.c
+	ft_atoi_only_num.c				  \
+	ft_realloc.c
 
 SRCS:= $(SRCS:%=$(SRCS_DIR)/%)
 
@@ -186,8 +65,12 @@ OBJS_DIR= ./OBJS
 OBJS=$(SRCS:$(SRCS_DIR)/%.c=$(OBJS_DIR)/%.o)
 
 INCS= includes
+INC_NAME = libft.h
 
-DEPS= $(OBJS:.o=.d)
+PURPLE          = \033[1;35m
+GREEN           = \033[1;32m
+RESET           = \033[0m
+
 
 
 #------------------------------------------------------------------------------#
@@ -215,8 +98,10 @@ MAKEFLAGS += --no-print-directory
 all:$(NAME)
 
 
-$(NAME): $(OBJS) $(INCS)
-	$(AR) $(NAME) $(OBJS)
+$(NAME): $(OBJS) $(INCS)/$(INC_NAME)
+	echo "$(PURPLE)Compiling $(NAME)...$(RESET)"
+		$(AR) $(NAME) $(OBJS)
+	echo "$(GREEN)$(NAME) compiled successfully!$(RESET)"
 
 $(OBJS_DIR)/%.o: $(SRCS_DIR)/%.c
 	@$(DIR_DUP)

@@ -22,8 +22,9 @@ LIBFT_DIR		= libft
 LIBFT_NAME		= libft.a
 
 INCLUDES   		= includes
+INC_NAME		= minitalk.h
+INC_NAMEB		= minitalk_bonus.h
 LIBFT 			= $(LIBFT_DIR)/libft.a
-
 SRC_CLIENT		= cfiles/client.c
 SRC_SERVER 		= cfiles/server.c
 
@@ -66,7 +67,8 @@ RESET           = \033[0m
 #------------------------------------------------------------------------------#
 
 
-all: $(LIBFT) $(NAME_CLIENT) $(NAME_SERVER)
+all: $(NAME_CLIENT) $(NAME_SERVER)
+	$(MAKE) -sC $(LIBFT_DIR)
 	echo "$(GREEN)"
 	echo "┌───────────────────────────────────────────────────────────┐"
 	echo "│      Compilation finished successfully! ᕕ(⌐■_■)ᕗ ♪♬       │"
@@ -100,30 +102,42 @@ bonus: $(LIBFT) $(NAMEB_CLIENT) $(NAMEB_SERVER)
 
 run_terminals: all
 	gnome-terminal --geometry=105x54+0+0 -- bash -c "\
-		cd /home/tarini/Documents/Workspace/TC/Rank_2/Minitalk/exec &&\
+		cd exec &&\
 		echo -e '\033[1;34m\033[1;4m				Welcome to Minitalk !\n\033[0m\
 		\033[1;35m\nPLEASE ENTER :\n\
 		\033[0m \033[1;31m\n./client \033[0m\033[1;31m<PID displayed in the second terminal>\033[0m\033[1;31m <message you want to send>\033[0m';\
 		exec bash" &
 	sleep 1
 	gnome-terminal --geometry=105x54+1920+0 -- bash -c "\
-		cd /home/tarini/Documents/Workspace/TC/Rank_2/Minitalk/exec &&\
+		cd exec &&\
 		sleep 1 && ./$(SERVER_EXEC);\
 		exec bash" &
 
-
 run_terminals_bonus: bonus
 	gnome-terminal --geometry=105x54+0+0 -- bash -c "\
-		cd /home/tarini/Documents/Workspace/TC/Rank_2/Minitalk/exec &&\
+		cd exec &&\
 		echo -e '\033[1;35mWelcome to \033[1;34m\033[1;4mMinitalk !\n\033[0m\
 		\033[1;35mPLEASE ENTER :\n\033[0m \033[1;31m\n./client_bonus \033[0m\033[1;31m<PID displayed in the second terminal>\033[0m\033[1;31m <message you want to send>\033[0m';\
 		exec bash" &
 	sleep 1
 	gnome-terminal --geometry=105x54+0+0 -- bash -c "\
-		cd /home/tarini/Documents/Workspace/TC/Rank_2/Minitalk/exec &&\
+		cd exec &&\
 		sleep 1 && ./$(SERVER_EXECB);\
 		exec bash" &
 
+valgrind: $(EXEC_G3)
+		$(MAKE) $(EXEC_G3)
+		if [ -z "$(FLAGS)" ]; then \
+			echo "$(PURPLE)Please define FLAGS (e.g., make valgrind FLAGS=1).$(RESET)"; \
+		elif [ "$(FLAGS)" -eq 1 ]; then \
+			valgrind --leak-check=full ./$(EXEC)/$(NAME_SERVER); \
+		elif [ "$(FLAGS)" -eq 2 ]; then \
+			valgrind --track-origins=yes ./$(EXEC)/$(NAME_SERVER); \
+		elif [ "$(FLAGS)" -eq 3 ]; then \
+			valgrind --tool=massif ./$(EXEC)/$(NAME_SERVER); \
+		else \
+			echo "$(RED)Invalid FLAGS value. Use 1, 2, or 3.$(RESET)"; \
+		fi;
 
 clean:
 	echo "$(RED)Deleting object files...$(RESET)"
@@ -170,7 +184,6 @@ go: fclean help run_terminals
 
 re: fclean all
 
-
 help:
 	echo "$(YELLOW)\n                  =============================="
 	echo "                        $(BOLD_UNDERLINE)AVAILABLE TARGETS:$(RESET)"
@@ -202,6 +215,9 @@ help:
 	echo "$(GREEN)  go$(RESET)   "
 	echo "    $(PURPLE)-$(RESET) use fclean, help and run_terminals rule"
 	echo " "
+	echo "$(GREEN)  russian_roulette$(RESET)   "
+	echo "    $(PURPLE)-$(RESET) you shouldn't try.. really don't try"
+	echo " "
 	echo "$(GREEN)───────────────────────────────────────────────────────────────────"
 
 
@@ -226,40 +242,46 @@ $(EXEC_DIR):
 # 							BUILD RULES										   #
 #------------------------------------------------------------------------------#
 
-$(LIBFT):
-	echo "$(PURPLE)Compiling $(LIBFT_NAME)...$(RESET)"
-
-		$(MAKE) -sC $(LIBFT_DIR)
-
-	echo "$(GREEN)$(LIBFT_NAME) compiled successfully!$(RESET)"
-
-$(NAME_CLIENT): $(OBJ_CLIENT) $(LIBFT) | $(EXEC_DIR)
+$(NAME_CLIENT): $(OBJ_CLIENT) $(INCLUDES)/$(INC_NAME) | $(EXEC_DIR)
 	echo "$(PURPLE)Linking $(NAME_CLIENT)...$(RESET)"
 
 		$(CC) $(OBJ_CLIENT) -o $(NAME_CLIENT) -L$(LIBFT_DIR) -lft
 
 	echo "$(GREEN)$(NAME_CLIENT) created successfully!$(RESET)"
 
-$(NAME_SERVER): $(OBJB_UTILS) $(OBJ_SERVER) $(LIBFT) | $(EXEC_DIR)
+$(NAME_SERVER): $(OBJ_SERVER) $(INCLUDES)/$(INC_NAME) | $(EXEC_DIR)
 	echo "$(PURPLE)Linking $(NAME_SERVER)...$(RESET)"
 
 		$(CC) $(OBJ_SERVER) -o $(NAME_SERVER) -L$(LIBFT_DIR) -lft
 
 	echo "$(GREEN)$(NAME_SERVER) created successfully!$(RESET)"
 
-$(NAMEB_CLIENT): $(OBJB_UTILS) $(OBJB_CLIENT) $(LIBFT) | $(EXEC_DIR)
+
+$(EXEC_G3): $(OBJB_CLIENT) $(OBJB_SERVER) $(INCLUDES)/$(INC_NAMEB) | $(EXEC_DIR)
+	$(CC) $(OBJB_CLIENT) -g3 -o $(NAMEB_CLIENT) -L$(LIBFT_DIR) -lft
+	$(CC) $(OBJB_SERVER) -g3 -o $(NAMEB_SERVER) -L$(LIBFT_DIR) -lft
+
+#------------------------------------------------------------------------------#
+# 							BUILD BONUS RULES								   #
+#------------------------------------------------------------------------------#
+
+$(NAMEB_CLIENT): $(OBJB_CLIENT) $(INCLUDES)/$(INC_NAMEB) | $(EXEC_DIR)
 	echo "$(PURPLE)Linking $(NAMEB_CLIENT)...$(RESET)"
 
 		$(CC) $(OBJB_CLIENT) -o $(NAMEB_CLIENT) -L$(LIBFT_DIR) -lft
 
 	echo "$(GREEN)$(NAMEB_CLIENT) created successfully!$(RESET)"
 
-$(NAMEB_SERVER): $(OBJB_SERVER) $(LIBFT) | $(EXEC_DIR)
+$(NAMEB_SERVER): $(OBJB_SERVER) $(INCLUDES)/$(INC_NAMEB) | $(EXEC_DIR)
 	echo "$(PURPLE)Linking $(NAMEB_SERVER)...$(RESET)"
 
 		$(CC) $(OBJB_SERVER) -o $(NAMEB_SERVER) -L$(LIBFT_DIR) -lft
 
 	echo "$(GREEN)$(NAMEB_SERVER) created successfully!$(RESET)"
+
+#------------------------------------------------------------------------------#
+# 							BUILD DIR RULES									   #
+#------------------------------------------------------------------------------#
 
 $(OBJ_DIR)/%.o: cfiles/%.c | $(OBJ_DIR)
 	echo "$(PURPLE)Compiling $< into $@$(RESET)"

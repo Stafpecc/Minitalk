@@ -6,7 +6,7 @@
 /*   By: tarini <tarini@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 15:21:52 by tarini            #+#    #+#             */
-/*   Updated: 2025/02/04 17:19:07 by tarini           ###   ########.fr       */
+/*   Updated: 2025/02/12 15:55:48 by tarini           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,6 @@ void			ft_putendl_fd(char *s, int fd);
 void			ft_putnbr_fd(int n, int fd);
 void			ft_striteri(char *s, void (*f)(unsigned int, char*));
 char			*ft_strmapi(char const *s, char (*f)(unsigned int, char));
-t_bool			ft_atoi_only_num(const char *str, int *result);
 
 // bonus
 
@@ -92,5 +91,10 @@ int				ft_putchar(char c);
 int				ft_putstr(char *str);
 int				ft_putnbrbase(long n, const char *base, int signed_flag);
 int				handle_conversion(const char format, va_list args);
+
+// Other function
+
+void			*ft_realloc(void *ptr, size_t new_size);
+t_bool			ft_atoi_only_num(const char *str, int *result);
 
 #endif

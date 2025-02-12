@@ -21,4 +21,4 @@ Dockerfile.*
 
 # Directories
 .objs
-*/.objs
+exec
