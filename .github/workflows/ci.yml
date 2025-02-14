@@ -21,7 +21,15 @@ jobs:
           ./server &
           SERVER_PID=$!
           sleep 1
-          ./client $SERVER_PID "Hello, Minitalk!"
+          ./client $SERVER_PID "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+          ./client $SERVER_PID "😊🎉🚀❤️"
+          ./client $SERVER_PID "!@#$%^&*()_+-=~`{}[]|:;'<>,.?/"
+          ./client $SERVER_PID ""
+          ./client $SERVER_PID "Hello,\nMinitalk!"
+          ./client $SERVER_PID "A"
+          ./client $SERVER_PID "This is a very long message with special characters like € and ñ."
+          ./client $SERVER_PID "Testing line breaks\nand spaces"
+          ./client $SERVER_PID "This is a very long message with special characters like € and ñ."
           sleep 1
           kill $SERVER_PID
 
@@ -31,7 +39,15 @@ jobs:
           valgrind --leak-check=full --error-exitcode=1 ./server &
           SERVER_PID=$!
           sleep 1
-          valgrind --leak-check=full --error-exitcode=1 ./client $SERVER_PID "Hello, Minitalk!"
+          valgrind --leak-check=full --error-exitcode=1 ./client $SERVER_PID "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+          valgrind --leak-check=full --error-exitcode=1 ./client $SERVER_PID "😊🎉🚀❤️"
+          valgrind --leak-check=full --error-exitcode=1 ./client $SERVER_PID "!@#$%^&*()_+-=~`{}[]|:;'<>,.?/"
+          valgrind --leak-check=full --error-exitcode=1 ./client $SERVER_PID ""
+          valgrind --leak-check=full --error-exitcode=1 ./client $SERVER_PID "Hello,\nMinitalk!"
+          valgrind --leak-check=full --error-exitcode=1 ./client $SERVER_PID "A"
+          valgrind --leak-check=full --error-exitcode=1 ./client $SERVER_PID "This is a very long message with special characters like € and ñ."
+          valgrind --leak-check=full --error-exitcode=1 ./client $SERVER_PID "Testing line breaks\nand spaces"
+          valgrind --leak-check=full --error-exitcode=1 ./client $SERVER_PID "This is a very long message with special characters like € and ñ."
           sleep 1
           kill $SERVER_PID
 
