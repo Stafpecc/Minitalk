@@ -1,35 +1,37 @@
 name: CI
 
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+on: [push, pull_request]
 
 jobs:
-  minitalk-test:
-    strategy:
-      matrix:
-        os: [ubuntu-latest, macos-latest]
-    runs-on: ${{ matrix.os }}
-
+  build:
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
-      - name: Build Docker image
-        run: docker build -t minitalk .
+      - name: Install dependencies
+        run: sudo apt-get update && sudo apt-get install -y gcc make valgrind
 
-      - name: Run tests inside Docker
-        run: docker run --rm minitalk | tee minitalk_logs.txt
+      - name: Build server
+        run: make server
 
-      - name: Run Valgrind tests
-        run: docker run --rm minitalk valgrind --leak-check=full ./client $(docker run --rm minitalk pidof server) "Test Message"
+      - name: Build client
+        run: make client
 
-      - name: Upload logs
-        uses: actions/upload-artifact@v3
-        with:
-          name: minitalk-test-logs
-          path: minitalk_logs.txt
+      - name: Run basic tests
+        run: |
+          ./server &
+          SERVER_PID=$!
+          sleep 1
+          ./client $SERVER_PID "Hello, Minitalk!"
+          sleep 1
+          kill $SERVER_PID
+
+      - name: Run Valgrind
+        run: |
+          valgrind --leak-check=full --error-exitcode=1 ./server &
+          valgrind --leak-check=full --error-exitcode=1 ./client 0 "Hello, Minitalk!"
+
+      - name: Run Cppcheck
+        run: cppcheck --enable=all --inconclusive --quiet .
+

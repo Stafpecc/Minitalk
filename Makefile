@@ -18,7 +18,7 @@ SERVER_EXECB	= server_bonus
 
 OBJ_DIR 		= .objs
 EXEC_DIR 		= exec
-LIBFT_DIR		= libft
+LIBFT_DIR		= ./libft
 LIBFT_NAME		= libft.a
 
 INCLUDES   		= includes
@@ -67,8 +67,7 @@ RESET           = \033[0m
 #------------------------------------------------------------------------------#
 
 
-all: $(NAME_CLIENT) $(NAME_SERVER)
-	$(MAKE) -sC $(LIBFT_DIR)
+all: libft $(NAME_CLIENT) $(NAME_SERVER)
 	echo "$(GREEN)"
 	echo "┌───────────────────────────────────────────────────────────┐"
 	echo "│      Compilation finished successfully! ᕕ(⌐■_■)ᕗ ♪♬       │"
@@ -83,8 +82,7 @@ all: $(NAME_CLIENT) $(NAME_SERVER)
 
 	echo "$(RESET)"
 
-
-bonus: $(LIBFT) $(NAMEB_CLIENT) $(NAMEB_SERVER)
+bonus: libft $(NAMEB_CLIENT) $(NAMEB_SERVER)
 	echo "$(GREEN)"
 	echo "┌───────────────────────────────────────────────────────────┐"
 	echo "│      Compilation finished successfully! ᕕ(⌐■_■)ᕗ ♪♬       │"
@@ -99,6 +97,8 @@ bonus: $(LIBFT) $(NAMEB_CLIENT) $(NAMEB_SERVER)
 
 	echo "$(RESET)"
 
+libft: FORCE
+	$(MAKE) -sC $(LIBFT_DIR) all
 
 run_terminals: all
 	gnome-terminal --geometry=105x54+0+0 -- bash -c "\
@@ -242,6 +242,9 @@ $(EXEC_DIR):
 # 							BUILD RULES										   #
 #------------------------------------------------------------------------------#
 
+$(LIBFT):
+		$(MAKE) -sC $(LIBFT_DIR)
+
 $(NAME_CLIENT): $(OBJ_CLIENT) $(INCLUDES)/$(INC_NAME) | $(EXEC_DIR)
 	echo "$(PURPLE)Linking $(NAME_CLIENT)...$(RESET)"
 
@@ -289,3 +292,6 @@ $(OBJ_DIR)/%.o: cfiles/%.c | $(OBJ_DIR)
 		$(CC) $(CFLAGS) -I$(INCLUDES) -c $< -o $@
 
 	echo "$(GREEN)Compilation of $< completed!$(RESET)"
+
+
+FORCE:
