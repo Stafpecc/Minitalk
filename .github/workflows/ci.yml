@@ -23,7 +23,7 @@ jobs:
           sleep 1
           ./client $SERVER_PID "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
           ./client $SERVER_PID "😊🎉🚀❤️"
-          ./client $SERVER_PID "!@#$%^&*()_+-=~`{}[]|:;'<>,.?/"
+          ./client $SERVER_PID "!@#\$%\^&\*\(\)_\+-=~\`{}[]|:;'<>,.?/"
           ./client $SERVER_PID ""
           ./client $SERVER_PID "Hello,\nMinitalk!"
           ./client $SERVER_PID "A"
@@ -41,7 +41,7 @@ jobs:
           sleep 1
           valgrind --leak-check=full --error-exitcode=1 ./client $SERVER_PID "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
           valgrind --leak-check=full --error-exitcode=1 ./client $SERVER_PID "😊🎉🚀❤️"
-          valgrind --leak-check=full --error-exitcode=1 ./client $SERVER_PID "!@#$%^&*()_+-=~`{}[]|:;'<>,.?/"
+          valgrind --leak-check=full --error-exitcode=1 ./client $SERVER_PID "!@#\$%\^&\*\(\)_\+-=~\`{}[]|:;'<>,.?/"
           valgrind --leak-check=full --error-exitcode=1 ./client $SERVER_PID ""
           valgrind --leak-check=full --error-exitcode=1 ./client $SERVER_PID "Hello,\nMinitalk!"
           valgrind --leak-check=full --error-exitcode=1 ./client $SERVER_PID "A"
