@@ -29,7 +29,11 @@ jobs:
         run: |
           cd exec
           valgrind --leak-check=full --error-exitcode=1 ./server &
-          valgrind --leak-check=full --error-exitcode=1 ./client 0 "Hello, Minitalk!"
+          SERVER_PID=$!
+          sleep 1
+          valgrind --leak-check=full --error-exitcode=1 ./client $SERVER_PID "Hello, Minitalk!"
+          sleep 1
+          kill $SERVER_PID
 
       - name: Run Cppcheck
         run: cppcheck --enable=all --inconclusive --quiet .
