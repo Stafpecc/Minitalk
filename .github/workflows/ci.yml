@@ -1,56 +1,48 @@
-name: CI
+name: Minitalk CI Pipeline
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
-  build:
+  tests:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
 
       - name: Install dependencies
-        run: sudo apt-get update && sudo apt-get install -y gcc make valgrind cppcheck
-
-      - name: Build all
-        run: make all
-
-      - name: Run basic tests
         run: |
-          cd exec
-          ./server &
-          SERVER_PID=$!
-          sleep 1
-          ./client $SERVER_PID "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-          ./client $SERVER_PID "😊🎉🚀❤️"
-          ./client $SERVER_PID "!@#\$%\^&\*\(\)_\+-=~\`{}[]|:;'<>,.?/"
-          ./client $SERVER_PID ""
-          ./client $SERVER_PID "Hello,\nMinitalk!"
-          ./client $SERVER_PID "A"
-          ./client $SERVER_PID "This is a very long message with special characters like € and ñ."
-          ./client $SERVER_PID "Testing line breaks\nand spaces"
-          ./client $SERVER_PID "This is a very long message with special characters like € and ñ."
-          sleep 1
-          kill $SERVER_PID
+          sudo apt update
+          sudo apt install build-essential valgrind cppcheck clang-tidy
+
+      - name: Build
+        run: |
+          make
 
       - name: Run Valgrind
         run: |
-          cd exec
-          valgrind --leak-check=full --error-exitcode=1 ./server &
-          SERVER_PID=$!
-          sleep 1
-          valgrind --leak-check=full --error-exitcode=1 ./client $SERVER_PID "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-          valgrind --leak-check=full --error-exitcode=1 ./client $SERVER_PID "😊🎉🚀❤️"
-          valgrind --leak-check=full --error-exitcode=1 ./client $SERVER_PID "!@#\$%\^&\*\(\)_\+-=~\`{}[]|:;'<>,.?/"
-          valgrind --leak-check=full --error-exitcode=1 ./client $SERVER_PID ""
-          valgrind --leak-check=full --error-exitcode=1 ./client $SERVER_PID "Hello,\nMinitalk!"
-          valgrind --leak-check=full --error-exitcode=1 ./client $SERVER_PID "A"
-          valgrind --leak-check=full --error-exitcode=1 ./client $SERVER_PID "This is a very long message with special characters like € and ñ."
-          valgrind --leak-check=full --error-exitcode=1 ./client $SERVER_PID "Testing line breaks\nand spaces"
-          valgrind --leak-check=full --error-exitcode=1 ./client $SERVER_PID "This is a very long message with special characters like € and ñ."
-          sleep 1
-          kill $SERVER_PID
+          chmod 0777 ./tests/valgrind_tests.sh
+          ./tests/valgrind_tests.sh
 
       - name: Run Cppcheck
-        run: cppcheck --enable=all --inconclusive --quiet .
+        run: |
+          chmod 0777 ./tests/cppcheck.sh
+          ./tests/cppcheck.sh
+
+      - name: Run Bible
+        run: |
+          chmod 0777 ./tests/bible.sh
+          ./tests/bible.sh
+
+      - name: Run all tests
+        run: |
+          chmod 0777 ./tests/tests.sh
+          ./tests/tests.sh
+
 

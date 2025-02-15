@@ -184,6 +184,15 @@ go: fclean help run_terminals
 
 re: fclean all
 
+test: all
+	chmod 0777 ./tests/tests.sh ./tests/valgrind_tests.sh
+	./tests/valgrind_tests.sh
+	./tests/tests.sh
+
+test_bible: all
+	chmod 0777 ./tests/bible.sh
+	./tests/bible.sh
+
 help:
 	echo "$(YELLOW)\n                  =============================="
 	echo "                        $(BOLD_UNDERLINE)AVAILABLE TARGETS:$(RESET)"
