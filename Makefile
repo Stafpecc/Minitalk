@@ -1,6 +1,6 @@
 
 .SILENT:
-.PHONY: all clean fclean re help fsanitize valgrind bonus run_terminals_bonus run_terminals go
+.PHONY: all clean fclean re help fsanitize valgrind bonus run_terminals_bonus run_terminals go tests test_bible
 
 
 #------------------------------------------------------------------------------#
@@ -184,7 +184,7 @@ go: fclean help run_terminals
 
 re: fclean all
 
-test: all
+tests: all
 	chmod 0777 ./tests/tests.sh ./tests/valgrind_tests.sh
 	./tests/valgrind_tests.sh
 	./tests/tests.sh
@@ -224,8 +224,11 @@ help:
 	echo "$(GREEN)  go$(RESET)   "
 	echo "    $(PURPLE)-$(RESET) use fclean, help and run_terminals rule"
 	echo " "
-	echo "$(GREEN)  russian_roulette$(RESET)   "
-	echo "    $(PURPLE)-$(RESET) you shouldn't try.. really don't try"
+	echo "$(GREEN)  tests$(RESET)   "
+	echo "    $(PURPLE)-$(RESET) Basic client-server communication tests. (Execution time: < 1 min)"
+	echo " "
+	echo "$(GREEN)  test_bible$(RESET)   "
+	echo "    $(PURPLE)-$(RESET) A very very very very very very large test. (Execution time: long)"
 	echo " "
 	echo "$(GREEN)───────────────────────────────────────────────────────────────────"
 
