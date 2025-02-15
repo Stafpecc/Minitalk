@@ -26,5 +26,6 @@ done
 echo "=== Server log content ==="
 cat "$LOG_FILE"  
 
+rm "$LOG_FILE"
 sleep 1  
 kill $SERVER_PID  
