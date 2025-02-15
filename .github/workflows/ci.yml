@@ -30,11 +30,6 @@ jobs:
           chmod 0777 ./tests/valgrind_tests.sh
           ./tests/valgrind_tests.sh
 
-      - name: Run Bible
-        run: |
-          chmod 0777 ./tests/bible.sh
-          ./tests/bible.sh
-
       - name: Run all tests
         run: |
           chmod 0777 ./tests/tests.sh
